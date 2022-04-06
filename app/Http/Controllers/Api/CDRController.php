@@ -104,8 +104,8 @@ class CDRController extends BaseController
             } catch(Exception $e) {
                 echo $e->getMessage();
             }
-                      $key = 'b9c9e0c9e04642f5a66b2278c4cb1e25'
-                    }
+          }
+                     
 }
 
     
