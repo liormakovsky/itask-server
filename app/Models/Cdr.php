@@ -24,7 +24,9 @@ class Cdr extends Model
         "date_time",
         "num_of_calls",
         "did",
-        "ip_address"
+        "ip_address",
+        "cont_source",
+        "cont_destination",
     ];
 
 }

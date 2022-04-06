@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Validator;
 use App\Models\Cdr;
+use GuzzleHttp\Client;
 
 
 class CDRController extends BaseController
@@ -88,7 +89,34 @@ class CDRController extends BaseController
                 return $this->sendResponse($csvData, 'file imported with success');
         } 
         
-      
+        public function getCdrs(Request $request)
+        {
+          
+ 
+            $ip_address = getUserIpAddr();
+            $access_key = 'API_ACCESS_KEY';
+            
+            try {
+                $client = new Client([
+                    "base_uri" => "http://api.ipapi.com",
+                ]);
+                  
+                $response = $client->request("GET", "/$ip_address", [
+                    "query" => [
+                        "access_key" => $access_key,
+                    ]
+                ]);
+                  
+                //get status code using $response->getStatusCode();
+              
+                $body = $response->getBody();
+                $arr_result = json_decode($body, true);
+                print_r($arr_result);
+            } catch(Exception $e) {
+                echo $e->getMessage();
+            }
+                      $key = 'b9c9e0c9e04642f5a66b2278c4cb1e25'
+                    }
 }
 
     
