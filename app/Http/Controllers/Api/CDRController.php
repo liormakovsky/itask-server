@@ -30,19 +30,11 @@ class CDRController extends BaseController
             // Valid File Extensions
             $valid_extension = ["csv"];
         
-            // 2MB in Bytes
-            $maxFileSize = 2097152; 
-        
             // Check file extension
             if(!in_array(strtolower($extension),$valid_extension)){
-                return $this->sendError('File is too large', ['error'=>'File is too large'],400);
+                return $this->sendError('Invalid File Extension', ['error'=>'Invalid File Extension'],400);
             }
 
-              // Check file size
-              if($fileSize > $maxFileSize){
-                return $this->sendError('Invalid File Extension', ['error'=>'Invalid File Extension'],400);
-              }
-        
                 // File upload location
                 $location = 'uploads';
         
@@ -68,7 +60,6 @@ class CDRController extends BaseController
                 }
                 fclose($file);
 
-                $csvData = [];
                 // Insert to MySQL database
                 foreach($importData_arr as $importData){
         
@@ -86,13 +77,11 @@ class CDRController extends BaseController
                    }
                 }
         
-                return $this->sendResponse($csvData, 'file imported with success');
+                return $this->sendResponse([], 'file imported with success');
         } 
         
         public function getCdrs(Request $request)
         {
-          
- 
             $ip_address = getUserIpAddr();
             $access_key = 'API_ACCESS_KEY';
             

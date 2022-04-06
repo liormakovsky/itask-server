@@ -47,9 +47,6 @@ class AuthController extends BaseController
 
         $input['password'] = bcrypt($input['password']);
 
-        $position = Location::get($request->ip());
-        $input['location'] = empty($position)?'Israel':$position->countryName;
-       
         $user = User::create($input);
 
         if(!$user){
@@ -63,7 +60,6 @@ class AuthController extends BaseController
 
         $success['name']= $user->name;
         $success['email'] = $user->email;
-        $success['location'] = $user->location;
         $success['token'] =  $user->createToken($user->email.'_Token')->plainTextToken;
         $success['location'] =  $user->location;
 
