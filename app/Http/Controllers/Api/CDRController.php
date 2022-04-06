@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Validator;
 use App\Models\Cdr;
+use App\Models\Country;
 use GuzzleHttp\Client;
 
 
@@ -62,13 +63,22 @@ class CDRController extends BaseController
 
                 // Insert to MySQL database
                 foreach($importData_arr as $importData){
-        
+                    $contDestination = NULL;
+                    if(!empty($importData[3])){
+                        $contDestination = Country::where('prefix', 'like', substr($importData[3], 0, 1).'__%')->pluck('continent');
+                        if(!empty($contDestination)){
+                            $contDestination = $contDestination[0];
+                        }
+                    }
+                    
                   $insertData = [
                      "customer_id"=>$importData[0],
                      "date_time"=>$importData[1],
                      "num_of_calls"=>$importData[2],
                      "did"=>$importData[3],
-                     "ip_address"=>$importData[4]
+                     "ip_address"=>$importData[4],
+                     "cont_source"=>NULL,
+                     "cont_destination"=>$contDestination
                   ];
                   $cdr = Cdr::create($insertData);
 
@@ -82,9 +92,8 @@ class CDRController extends BaseController
         
         public function getCdrs(Request $request)
         {
-            $ip_address = getUserIpAddr();
-            $access_key = 'API_ACCESS_KEY';
-            
+            $access_key = env('ACCESS_KEY');
+        
             try {
                 $client = new Client([
                     "base_uri" => "http://api.ipapi.com",
@@ -105,6 +114,7 @@ class CDRController extends BaseController
                 echo $e->getMessage();
             }
           }
+
                      
 }
 
