@@ -8,7 +8,6 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\User;
-use Stevebauman\Location\Facades\Location;
 
 class AuthController extends BaseController
 {
@@ -18,11 +17,9 @@ class AuthController extends BaseController
             $request->session()->regenerate();
             $authUser = Auth::user(); 
             $success['token'] =  $authUser->createToken($authUser->email.'_Token')->plainTextToken; 
-            $success['location'] = $authUser->location;
             $success['name'] = $authUser->name;
             $success['email'] = $authUser->email;
-            $success['location'] = $authUser->location;
-   
+  
             return $this->sendResponse($success, 'User signed in');
         } 
         else{ 
@@ -61,7 +58,7 @@ class AuthController extends BaseController
         $success['name']= $user->name;
         $success['email'] = $user->email;
         $success['token'] =  $user->createToken($user->email.'_Token')->plainTextToken;
-        $success['location'] =  $user->location;
+ 
 
         return $this->sendResponse($success, 'User created successfully.');
         }else{
@@ -74,8 +71,7 @@ class AuthController extends BaseController
         
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email',
-            'location'=>'required'
+            'email' => 'required|email'
         ]);
    
         if($validator->fails()){
@@ -86,7 +82,6 @@ class AuthController extends BaseController
         $updateUser = [
            'name'=>$input['name'],
            'email'=>$input['email'],
-           'location'=>$input['location']
         ];
 
         $user = auth()->user()->update($updateUser);
