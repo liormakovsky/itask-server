@@ -24,5 +24,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('auth/updateUser',[AuthController::class, 'updateUser']);
     Route::post('auth/logout', [AuthController::class, 'logout']); 
     Route::post('uploadFile', [CDRController::class, 'uploadFile']);
+    Route::post('getCdrCalls', [CDRController::class, 'getCdrCalls']);
 });
 

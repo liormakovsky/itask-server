@@ -22,11 +22,21 @@ class Cdr extends Model
     protected $fillable = [
         "customer_id",
         "date_time",
-        "num_of_calls",
+        "duration",
         "did",
         "ip_address",
         "cont_source",
         "cont_destination",
+    ];
+
+        /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at'
     ];
 
 }
