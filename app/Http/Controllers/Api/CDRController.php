@@ -77,7 +77,7 @@ class CDRController extends BaseController
                      "num_of_calls"=>$importData[2],
                      "did"=>$importData[3],
                      "ip_address"=>$importData[4],
-                     "cont_source"=>NULL,
+                     "cont_source"=>$this->getContinentCodeByIp($importData[4]),
                      "cont_destination"=>$contDestination
                   ];
                   $cdr = Cdr::create($insertData);
@@ -90,18 +90,19 @@ class CDRController extends BaseController
                 return $this->sendResponse([], 'file imported with success');
         } 
         
-        public function getCdrs(Request $request)
+        private function getContinentCodeByIp($ip_address)
         {
             $access_key = env('ACCESS_KEY');
-        
+
             try {
                 $client = new Client([
-                    "base_uri" => "http://api.ipapi.com",
+                    "base_uri" => "https://api.ipgeolocation.io",
                 ]);
                   
-                $response = $client->request("GET", "/$ip_address", [
+                $response = $client->request("GET", 'ipgeo', [
                     "query" => [
-                        "access_key" => $access_key,
+                        "apiKey" => $access_key,
+                        "ip" => $ip_address,
                     ]
                 ]);
                   
@@ -109,10 +110,11 @@ class CDRController extends BaseController
               
                 $body = $response->getBody();
                 $arr_result = json_decode($body, true);
-                print_r($arr_result);
+                return $arr_result['continent_code'];
             } catch(Exception $e) {
                 echo $e->getMessage();
             }
+            
           }
 
                      
