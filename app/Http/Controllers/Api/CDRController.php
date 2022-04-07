@@ -13,7 +13,10 @@ use DB;
 
 
 class CDRController extends BaseController
-{
+{   
+    /**
+     * Upload csv file into DB
+     */
     public function uploadFile(Request $request)
     {
         
@@ -90,7 +93,11 @@ class CDRController extends BaseController
         
         return $this->sendResponse([], 'file imported with success');
     } 
-        
+      
+    /**
+     * get continent code from ipgeolocation by ip
+     * return continent code:string
+     */
     private function getContinentCodeByIp($ip_address)
     {
         $access_key = env('ACCESS_KEY');
@@ -116,11 +123,14 @@ class CDRController extends BaseController
             
     }
 
+    /**
+     * get cdr data from DB
+     */
     public function getCdrCalls(Request $request){
             $totals = DB::table('cdr')
-            ->select('customer_id')
             ->selectRaw(
-                'count(*) as total_calls, 
+                'customer_id,
+                count(*) as total_calls, 
                 SUM(CASE WHEN cont_source = cont_destination THEN 1 ELSE 0 END) AS total_calls_same_cont,
                 SUM(CASE WHEN cont_source = cont_destination THEN duration ELSE 0 END) AS total_duration_same_cont,
                 SUM(duration) as total_duration')
