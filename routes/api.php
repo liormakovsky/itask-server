@@ -18,7 +18,6 @@ use App\Http\Controllers\API\CDRController;
 
 Route::post('auth/login', [AuthController::class, 'signin']);
 Route::post('auth/register', [AuthController::class, 'signup']);
-Route::post('getCdrs', [CDRController::class, 'getCdrs']);
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('auth/updateUser',[AuthController::class, 'updateUser']);
