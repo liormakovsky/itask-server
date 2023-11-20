@@ -17,10 +17,8 @@ class TasksController extends BaseController
      */
     public function index($userId)
     {
-        // Find the user by ID
         $user = User::find($userId);
 
-        // Check if the user exists
         if (!$user) {
             return $this->sendError('User not found', [], 404);
         }
@@ -28,7 +26,7 @@ class TasksController extends BaseController
         // Check if the authenticated user is an admin
         $isAdmin = $user->role === 'admin';
 
-        // Retrieve tasks based on the user's role
+
         if ($isAdmin) {
             // If the user is an admin, retrieve all tasks
             $tasks = Task::with('user')->get();

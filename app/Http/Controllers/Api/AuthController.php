@@ -93,13 +93,10 @@ class AuthController extends BaseController
         $user = User::where('email', $input['email'])->first();
 
         if ($user) {
-            // Assuming $updateUser is an array containing fields to update
             $user->update($updatedUser);
 
-            // Return the updated user or any other response
             return response()->json(['user' => $user, 'message' => 'User updated successfully']);
         } else {
-            // Handle the case where the user with the given ID is not found
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -107,13 +104,6 @@ class AuthController extends BaseController
 
     }
 
-    // public function logout(Request $request)
-    // {
-    //     auth()->user()->tokens()->delete();
-    //     $request->session()->invalidate();
-    //     $request->session()->regenerateToken();
-    //     return $this->sendResponse('success', 'User logout successfully.');
-    // }
 
 
 }
