@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-
+    use SoftDeletes;
     /**
      * The table associated with the model.
      *
@@ -34,7 +35,8 @@ class Task extends Model
      */
     protected $hidden = [
         'created_at',
-        'updated_at'
+        'updated_at',
+        'deleted_at'
     ];
     protected $casts = [
         'due_date' => 'datetime',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
 use Validator;
 
 class TasksController extends BaseController
@@ -14,10 +15,28 @@ class TasksController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($userId)
     {
-        $tasks = Task::with('user')->get();
+        // Find the user by ID
+        $user = User::find($userId);
 
+        // Check if the user exists
+        if (!$user) {
+            return $this->sendError('User not found', [], 404);
+        }
+    
+        // Check if the authenticated user is an admin
+        $isAdmin = $user->role === 'admin';
+
+        // Retrieve tasks based on the user's role
+        if ($isAdmin) {
+            // If the user is an admin, retrieve all tasks
+            $tasks = Task::with('user')->get();
+        } else {
+            // If the user is not an admin, retrieve tasks for the specified user
+            $tasks = Task::where('user_id', $userId)->with('user')->get();
+        }
+    
         return $this->sendResponse($tasks, 'Tasks retrieved successfully');
     }
 
@@ -77,24 +96,26 @@ class TasksController extends BaseController
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => $userId,
             'title' => 'required',
             'description' => 'required',
             'due_date' => 'required|date',
         ]);
-
+    
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(), 422);
         }
-
-        $task = Task::find($id);
-
+    
+        $task = Task::with('user')->find($id);
+    
         if (is_null($task)) {
             return $this->sendError('Task not found');
         }
-
+    
         $task->update($request->all());
-
+    
+        // Refresh the task to get the updated user information
+        $task->refresh();
+    
         return $this->sendResponse($task, 'Task updated successfully');
     }
 

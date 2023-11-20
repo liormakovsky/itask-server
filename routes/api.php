@@ -19,7 +19,7 @@ use App\Http\Controllers\API\TasksController;
 Route::post('auth/login', [AuthController::class, 'signin']);
 Route::post('auth/register', [AuthController::class, 'signup']);
 Route::post('auth/updateUser',[AuthController::class, 'updateUser']);
-
+Route::get('tasks/{userId}', [TasksController::class, 'index']);
 Route::resource('tasks', TasksController::class);
 
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->timestamp('due_date', $precision = 0)->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             // Foreign key relationship
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
