@@ -15,10 +15,14 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id'); 
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->timestamp('due_date', $precision = 0)->nullable();
             $table->timestamps();
+
+            // Foreign key relationship
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -21,6 +21,7 @@ class Task extends Model
      */
     protected $fillable = [
         "id",
+        "user_id",
         "title",
         "description",
         "due_date",
@@ -35,5 +36,11 @@ class Task extends Model
         'created_at',
         'updated_at'
     ];
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
 }

@@ -18,11 +18,8 @@ use App\Http\Controllers\API\TasksController;
 
 Route::post('auth/login', [AuthController::class, 'signin']);
 Route::post('auth/register', [AuthController::class, 'signup']);
+Route::post('auth/updateUser',[AuthController::class, 'updateUser']);
 
-//Route::middleware('auth:sanctum')->group(function(){
-    Route::post('auth/updateUser',[AuthController::class, 'updateUser']);
-    Route::post('auth/logout', [AuthController::class, 'logout']); 
-    Route::post('uploadFile', [TasksController::class, 'uploadFile']);
-    Route::post('getTasks', [TasksController::class, 'getTasks']);
-//});
+Route::resource('tasks', TasksController::class);
+
 
