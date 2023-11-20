@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cdr extends Model
+class Task extends Model
 {
 
     /**
@@ -12,7 +12,7 @@ class Cdr extends Model
      *
      * @var string
      */
-    protected $table = 'cdr';
+    protected $table = 'tasks';
 
     /**
      * The attributes that are mass assignable.
@@ -20,13 +20,10 @@ class Cdr extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        "customer_id",
-        "date_time",
-        "duration",
-        "did",
-        "ip_address",
-        "cont_source",
-        "cont_destination",
+        "id",
+        "title",
+        "description",
+        "due_date",
     ];
 
         /**

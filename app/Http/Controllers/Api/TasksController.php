@@ -12,7 +12,7 @@ use GuzzleHttp\Client;
 use DB;
 
 
-class CDRController extends BaseController
+class Tasksontroller extends BaseController
 {   
     /**
      * Upload csv file into DB
@@ -94,49 +94,21 @@ class CDRController extends BaseController
         return $this->sendResponse([], 'file imported with success');
     } 
       
-    /**
-     * get continent code from ipgeolocation by ip
-     * return continent code:string
-     */
-    private function getContinentCodeByIp($ip_address)
-    {
-        $access_key = env('ACCESS_KEY');
-
-        try {
-            $client = new Client([
-                "base_uri" => "https://api.ipgeolocation.io",
-            ]);
-                  
-            $response = $client->request("GET", 'ipgeo', [
-                "query" => [
-                    "apiKey" => $access_key,
-                    "ip" => $ip_address,
-                ]
-            ]);
-                  
-            $body = $response->getBody();
-            $arr_result = json_decode($body, true);
-            return $arr_result['continent_code'];
-        } catch(Exception $e) {
-            echo $e->getMessage();
-        }
-            
-    }
 
     /**
-     * get cdr data from DB
+     * get Tasks
      */
-    public function getCdrCalls(Request $request){
-            $totals = DB::table('cdr')
-            ->selectRaw(
-                'customer_id,
-                count(*) as total_calls, 
-                SUM(CASE WHEN cont_source = cont_destination THEN 1 ELSE 0 END) AS total_calls_same_cont,
-                SUM(CASE WHEN cont_source = cont_destination THEN duration ELSE 0 END) AS total_duration_same_cont,
-                SUM(duration) as total_duration')
-            ->groupBy('customer_id')
-            ->get();
-            return $this->sendResponse($totals, '');
+    public function getTasks(Request $request){
+            // $totals = DB::table('cdr')
+            // ->selectRaw(
+            //     'customer_id,
+            //     count(*) as total_calls, 
+            //     SUM(CASE WHEN cont_source = cont_destination THEN 1 ELSE 0 END) AS total_calls_same_cont,
+            //     SUM(CASE WHEN cont_source = cont_destination THEN duration ELSE 0 END) AS total_duration_same_cont,
+            //     SUM(duration) as total_duration')
+            // ->groupBy('customer_id')
+            // ->get();
+            return $this->sendResponse([], '');
     }
         
                      

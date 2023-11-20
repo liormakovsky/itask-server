@@ -16,9 +16,11 @@ class AuthController extends BaseController
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $request->session()->regenerate();
             $authUser = Auth::user(); 
+            $success['id'] = $authUser->id;
             $success['token'] =  $authUser->createToken($authUser->email.'_Token')->plainTextToken; 
             $success['name'] = $authUser->name;
             $success['email'] = $authUser->email;
+            $success['role'] = $authUser->role;
   
             return $this->sendResponse($success, 'User signed in');
         } 
@@ -33,6 +35,7 @@ class AuthController extends BaseController
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
+            'role' => 'required',
             'password' => 'required',
         ]);
         
@@ -54,9 +57,11 @@ class AuthController extends BaseController
 
         if(Auth::attempt(['email' => $user->email, 'password' => $request->password])){ 
         $request->session()->regenerate();
-
+        
+        $success['id']= $user->id;
         $success['name']= $user->name;
         $success['email'] = $user->email;
+        $success['role'] = $user->role;
         $success['token'] =  $user->createToken($user->email.'_Token')->plainTextToken;
  
 
@@ -71,7 +76,8 @@ class AuthController extends BaseController
         
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'role' => 'required'
         ]);
    
         if($validator->fails()){
@@ -79,26 +85,35 @@ class AuthController extends BaseController
         }
 
         $input = $request->all();
-        $updateUser = [
+        $updatedUser = [
            'name'=>$input['name'],
-           'email'=>$input['email'],
+           'role'=>$input['role'],
         ];
 
-        $user = auth()->user()->update($updateUser);
+        $user = User::where('email', $input['email'])->first();
 
-        $user = User::find(Auth::id());
+        if ($user) {
+            // Assuming $updateUser is an array containing fields to update
+            $user->update($updatedUser);
+
+            // Return the updated user or any other response
+            return response()->json(['user' => $user, 'message' => 'User updated successfully']);
+        } else {
+            // Handle the case where the user with the given ID is not found
+            return response()->json(['message' => 'User not found'], 404);
+        }
 
         return $this->sendResponse($user, 'User updated');
 
     }
 
-    public function logout(Request $request)
-    {
-        auth()->user()->tokens()->delete();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return $this->sendResponse('success', 'User logout successfully.');
-    }
+    // public function logout(Request $request)
+    // {
+    //     auth()->user()->tokens()->delete();
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
+    //     return $this->sendResponse('success', 'User logout successfully.');
+    // }
 
 
 }

@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('code',3)->nullable();
-            $table->string('prefix',5)->nullable();
-            $table->string('continent',2)->nullable();
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
+            $table->timestamp('due_date', $precision = 0)->nullable();
+            $table->timestamps();
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('tasks');
     }
 };
